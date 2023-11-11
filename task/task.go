@@ -29,31 +29,31 @@ var (
 )
 
 type Task struct {
-	name      string
-	desc      string
-	id        uuid.UUID
-	priority  int
-	remaining time.Duration
+	Name      string        `xml:"name"`
+	Desc      string        `xml:"desc"`
+	ID        uuid.UUID     `xml:"id"`
+	Priority  int           `xml:"priority"`
+	Remaining time.Duration `xml:"remaining"`
 }
 
 func (ta *Task) GetName() string {
-	return ta.name
+	return ta.Name
 }
 
 func (ta *Task) GetDesc() string {
-	return ta.desc
+	return ta.Desc
 }
 
 func (ta *Task) GetID() string {
-	return ta.id.String()
+	return ta.ID.String()
 }
 
 func (ta *Task) GetPrio() int {
-	return ta.priority
+	return ta.Priority
 }
 
 func (ta *Task) GetRemaining() time.Duration {
-	return ta.remaining
+	return ta.Remaining
 }
 
 func NewTask(name, desc string, priority int, t time.Duration) (*Task, error) {
@@ -70,10 +70,10 @@ func NewTask(name, desc string, priority int, t time.Duration) (*Task, error) {
 	}
 
 	return &Task{
-		id:        uuid.New(),
-		name:      name,
-		desc:      desc,
-		priority:  priority,
-		remaining: t,
+		ID:        uuid.New(),
+		Name:      name,
+		Desc:      desc,
+		Priority:  priority,
+		Remaining: t,
 	}, nil
 }

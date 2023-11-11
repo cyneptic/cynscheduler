@@ -1,0 +1,12 @@
+<Task>
+  <name>Walk</name>
+  <desc>Go for a Walk</desc>
+  <priority>1</priority>
+  <remaining>50</remaining> <!-- in minutes-->
+</Task>
+<Task>
+  <name>Walk</name>
+  <desc>Go for a Walk</desc>
+  <priority>1</priority>
+  <remaining>50</remaining> <!-- in minutes-->
+</Task>
