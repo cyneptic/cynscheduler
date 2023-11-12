@@ -2,11 +2,16 @@
   "Walk": {
     "desc": "Go for a walk",
     "priority": 1,
-    "remaining": 50
+    "remaining": 1
   },
   "Groceries": {
     "desc": "Buy groceries",
     "priority": 1,
-    "remaining": 50
+    "remaining": 2
+  },
+  "Test": {
+    "desc": "Buy groceries",
+    "priority": 2,
+    "remaining": 1
   }
 }

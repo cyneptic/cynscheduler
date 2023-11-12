@@ -15,7 +15,7 @@ type TaskDTO struct {
 	Remaining int    `json:"remaining"`
 }
 
-func Config_loader() ([]*task.Task, error) {
+func Config_loader() (map[string]*task.Task, error) {
 	config := make(map[string]TaskDTO)
 
 	configFile, err := os.Open("config.json")
@@ -33,14 +33,14 @@ func Config_loader() ([]*task.Task, error) {
 		return nil, err
 	}
 
-	var result []*task.Task
+	result := make(map[string]*task.Task)
 
 	for name, v := range config {
 		task, err := task.NewTask(name, v.Desc, v.Priority, time.Duration(v.Remaining)*time.Minute)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, task)
+		result[name] = task
 	}
 
 	return result, nil

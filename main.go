@@ -1,10 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"strconv"
 	"time"
 
+	"github.com/cyneptic/cynscheduler/app"
 	"github.com/cyneptic/cynscheduler/task"
 	"github.com/cyneptic/cynscheduler/utils"
 )
@@ -33,5 +38,34 @@ Config loaded! your tasks are:
 		fmt.Printf("%s: %s - its one of the %s tasks and you need to spend %d minutes on this task\n", t.Name, t.Desc, task.PriorityList[t.Priority], t.Remaining/time.Minute)
 	}
 
-	select {}
+	fmt.Println(`
+Press 'enter' to continue.
+    `)
+
+	fmt.Println("You pressed Enter")
+
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+
+	utils.Clear()
+	fmt.Println("How many hours do you have remaining in this day?")
+	scanner.Scan()
+	n := scanner.Text()
+	nInt, err := strconv.Atoi(n)
+	if err != nil {
+		log.Print(fmt.Errorf("%w", err))
+	}
+
+	dayRemainingTime := time.Duration(nInt) * time.Hour
+
+	fmt.Println(`
+Creating Application...
+    `)
+
+	application := app.NewApp(config, dayRemainingTime)
+	go application.Start()
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
+	<-stop
 }
