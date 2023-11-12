@@ -1,0 +1,12 @@
+{
+  "Walk": {
+    "desc": "Go for a walk",
+    "priority": 1,
+    "remaining": 50
+  },
+  "Groceries": {
+    "desc": "Buy groceries",
+    "priority": 1,
+    "remaining": 50
+  }
+}

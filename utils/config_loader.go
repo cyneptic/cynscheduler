@@ -1,46 +1,42 @@
 package utils
 
 import (
-	"encoding/xml"
+	"encoding/json"
 	"io"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/cyneptic/cynscheduler/task"
 )
 
 type TaskDTO struct {
-	Name      string `xml:"name"`
-	Desc      string `xml:"desc"`
-	Priority  string `xml:"priority"`
-	Remaining string `xml:"remaining"`
+	Desc      string `json:"desc"`
+	Priority  int    `json:"priority"`
+	Remaining int    `json:"remaining"`
 }
 
 func Config_loader() ([]*task.Task, error) {
-	var config []TaskDTO
+	config := make(map[string]TaskDTO)
 
-	xmlFile, err := os.Open("../config.xml")
+	configFile, err := os.Open("config.json")
 	if err != nil {
 		return nil, err
 	}
 
-	xmlData, err := io.ReadAll(xmlFile)
+	configData, err := io.ReadAll(configFile)
 	if err != nil {
 		return nil, err
 	}
 
-	err = xml.Unmarshal(xmlData, &config)
+	err = json.Unmarshal(configData, &config)
 	if err != nil {
 		return nil, err
 	}
 
 	var result []*task.Task
-	for _, v := range config {
-		prio, _ := strconv.Atoi(v.Priority)
-		r, _ := strconv.Atoi(v.Remaining)
-		remaining := time.Duration(r) * time.Minute
-		task, err := task.NewTask(v.Name, v.Desc, prio, remaining)
+
+	for name, v := range config {
+		task, err := task.NewTask(name, v.Desc, v.Priority, time.Duration(v.Remaining)*time.Minute)
 		if err != nil {
 			return nil, err
 		}

@@ -15,6 +15,13 @@ const (
 	NotImportantNotUrgent
 )
 
+var PriorityList = map[int]string{
+	ImportantAndUrgent:    "Important and urgent",
+	NotImportantUrgent:    "Not important but urgent",
+	ImportantNotUrgent:    "Important but not urgent",
+	NotImportantNotUrgent: "Not important and not urgent",
+}
+
 var (
 	ErrInvalidPriority = errors.New(`invalid priority, should be between 
     1 (Important and Urgent), 

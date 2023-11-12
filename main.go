@@ -1,28 +1,36 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"log"
+	"time"
+
+	"github.com/cyneptic/cynscheduler/task"
+	"github.com/cyneptic/cynscheduler/utils"
 )
+
+var actionTime = 1 * time.Second
 
 func main() {
 	fmt.Println(`
-  Welcome to Cynscheduler time management cli tool.
+Welcome to cynscheduler
 
-  the first step is to define your tasks to be tracked.
-  this step will continue until you run can longer fit a certain task in your schedule
-  or until you choose to add no other tasks via the 'finish' command
+Loading Config File...
+    `)
 
+	time.Sleep(actionTime)
+	config, err := utils.Config_loader()
+	if err != nil {
+		log.Print(fmt.Errorf("%w", err))
+	}
 
-  to start adding tasks please enter "start"`)
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
+	utils.Clear()
+	fmt.Println(`
+Config loaded! your tasks are:
+    `)
 
-	if scanner.Text() == "start" {
-		fmt.Println("starting")
-	} else {
-		fmt.Println("???")
+	for _, t := range config {
+		fmt.Printf("%s: %s - its one of the %s tasks and you need to spend %d minutes on this task\n", t.Name, t.Desc, task.PriorityList[t.Priority], t.Remaining/time.Minute)
 	}
 
 	select {}
