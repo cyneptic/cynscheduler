@@ -16,8 +16,8 @@ func TestConfigLoader(t *testing.T) {
 
 	assert.Equal("walk", tasks[0].Name)
 	assert.Equal("go for a walk", tasks[0].Description)
-	assert.Equal(5*time.Minute, tasks[0].Remaining)
+	assert.Equal(5*time.Minute, tasks[0].Timer.Timer())
 	assert.Equal("groceries", tasks[1].Name)
 	assert.Equal("buy groceries", tasks[1].Description)
-	assert.Equal(5*time.Minute, tasks[1].Remaining)
+	assert.Equal(5*time.Minute, tasks[1].Timer.Timer())
 }

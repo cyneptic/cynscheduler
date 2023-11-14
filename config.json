@@ -2,11 +2,22 @@
   {
     "name": "walk",
     "description": "go for a walk",
-    "duration_in_minutes": 5
+    "duration_in_minutes": 3,
+    "important": true,
+    "urgent": false
   },
   {
     "name": "groceries",
     "description": "buy groceries",
-    "duration_in_minutes": 5
+    "duration_in_minutes": 3,
+    "important": true,
+    "urgent": false
+  },
+  {
+    "name": "game",
+    "description": "play games",
+    "duration_in_minutes": 999,
+    "important": false,
+    "urgent": false
   }
 ]

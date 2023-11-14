@@ -1,20 +1,34 @@
 package task
 
-import "time"
+import (
+	"time"
+)
+
+type Timer interface {
+	Tick()
+	Pause()
+	Resume()
+	Done() bool
+	Timer() time.Duration
+}
 
 type Task struct {
+	Timer       Timer
 	Name        string
 	Description string
-	Remaining   time.Duration
 	Spent       time.Duration
+	Important   bool
+	Urgent      bool
 }
 
 type TaskJSON struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Remaining   int    `json:"duration_of_task"`
+	Remaining   int    `json:"duration_in_minutes"`
+	Important   bool   `json:"important"`
+	Urgent      bool   `json:"urgent"`
 }
 
-func NewTask(name, desc string, remaining int) *Task {
-	return &Task{name, desc, time.Duration(remaining) * time.Minute, 0}
+func NewTask(name, desc string, remaining int, important, urgent bool) *Task {
+	return &Task{NewTimerService(time.Duration(remaining) * time.Minute), name, desc, 0, important, urgent}
 }

@@ -23,7 +23,7 @@ func LoadConfig(relPath string) ([]*task.Task, error) {
 	}
 
 	for _, t := range parsedConfig {
-		ta := task.NewTask(t.Name, t.Description, t.Remaining)
+		ta := task.NewTask(t.Name, t.Description, t.Remaining, t.Important, t.Urgent)
 		result = append(result, ta)
 	}
 
