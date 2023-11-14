@@ -1,0 +1,12 @@
+[
+  {
+    "name": "walk",
+    "description": "go for a walk",
+    "duration_of_task": 5
+  },
+  {
+    "name": "groceries",
+    "description": "buy groceries",
+    "duration_of_task": 5
+  }
+]
