@@ -9,6 +9,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/timer"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/cyneptic/cynscheduler/task"
 )
 
@@ -87,7 +88,8 @@ func (a *App) View() string {
 			os.Exit(0)
 		}()
 	}
-	return s
+	style := lipgloss.NewStyle().Align(lipgloss.Center).Background(lipgloss.Color("#000ff")).Foreground(lipgloss.Color("#ffff00"))
+	return style.Render(s)
 }
 
 type GoodByeMsg struct{}
