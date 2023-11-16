@@ -1,9 +1,30 @@
 {
   "tasks": [
     {
+      "name": "Work",
+      "description": "do your work",
+      "duration_in_minutes": 1,
+      "important": true,
+      "urgent": true
+    },
+    {
+      "name": "Project",
+      "description": "work on side projects",
+      "duration_in_minutes": 2,
+      "important": true,
+      "urgent": false
+    },
+    {
       "name": "car handling",
       "description": "can be delegated",
       "duration_in_minutes": 1,
+      "important": false,
+      "urgent": true
+    },
+    {
+      "name": "fake task",
+      "description": "some fake task",
+      "duration_in_minutes": 5,
       "important": false,
       "urgent": true
     },
