@@ -1,16 +1,19 @@
-[
-  {
-    "name": "walk",
-    "description": "go for a walk",
-    "duration_in_minutes": 5,
-    "important": true,
-    "urgent": false
-  },
-  {
-    "name": "groceries",
-    "description": "buy groceries",
-    "duration_in_minutes": 5,
-    "important": true,
-    "urgent": false
-  }
-]
+{
+  "tasks": [
+    {
+      "name": "walk",
+      "description": "go for a walk",
+      "duration_in_minutes": 5,
+      "important": true,
+      "urgent": false
+    },
+    {
+      "name": "groceries",
+      "description": "buy groceries",
+      "duration_in_minutes": 5,
+      "important": true,
+      "urgent": false
+    }
+  ],
+  "hours": 4
+}

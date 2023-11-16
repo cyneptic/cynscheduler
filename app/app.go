@@ -2,7 +2,6 @@ package app
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 	"time"
 
@@ -69,24 +68,41 @@ func (a *App) Init() tea.Cmd {
 }
 
 func (a *App) View() string {
-	s := fmt.Sprintf("%v\n\n", a.Timer.View())
-	s += fmt.Sprintf("current task: %s", a.CurTask.Name)
-	if a.CurTask.Important || a.CurTask.Urgent {
-		s += fmt.Sprintf(", time remaining: %v", a.CurTask.Timer.Timer())
+	if a.IsFinished {
+		s := "\nGood bye ! :)\n\n"
+		return s
 	}
+	s := styles.GetTitleString(a.Timer.View())
 	s += "\n\n"
 	s += styles.GetStyledTable(a.Tasks)
-	if a.IsFinished {
-		s = "\nGood bye ! :)\n\n"
-	}
+	s += "\n\n" + styles.GetLegendString(a.CurTask)
+
+	s = styles.GetMainStyle(s)
 
 	return s
 }
 
-type GoodByeMsg struct{}
+type (
+	GoodByeMsg  struct{}
+	FinishMsg   struct{}
+	DelegateMsg struct{}
+)
 
 func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case FinishMsg:
+		if len(a.Tasks) == 1 {
+			a.IsFinished = true
+			return a, func() tea.Msg { return tea.QuitMsg{} }
+		}
+		a.Next()
+	case DelegateMsg:
+		if len(a.Tasks) == 1 {
+			a.IsFinished = true
+			return a, func() tea.Msg { return tea.QuitMsg{} }
+		}
+		a.Next()
+
 	case tea.QuitMsg:
 		time.Sleep(time.Second)
 		return a, tea.Quit
@@ -124,6 +140,12 @@ func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case msg.Type == tea.KeySpace:
 			return a, a.Timer.Toggle()
+
+		case msg.Type == tea.KeyCtrlF:
+			return a, func() tea.Msg { return FinishMsg{} }
+		case msg.Type == tea.KeyCtrlD:
+			return a, func() tea.Msg { return DelegateMsg{} }
+
 		}
 	}
 

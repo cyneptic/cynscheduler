@@ -9,25 +9,25 @@ import (
 	"github.com/cyneptic/cynscheduler/task"
 )
 
-func LoadConfig(relPath string) ([]*task.Task, error) {
+func LoadConfig(relPath string) ([]*task.Task, int, error) {
 	var result []*task.Task
 
 	configJson, err := GetConfig(relPath)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	parsedConfig, err := ParseConfig(configJson)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	for _, t := range parsedConfig {
+	for _, t := range parsedConfig.Tasks {
 		ta := task.NewTask(t.Name, t.Description, t.Remaining, t.Important, t.Urgent)
 		result = append(result, ta)
 	}
 
-	return result, nil
+	return result, parsedConfig.Hours, nil
 }
 
 func GetConfig(relPath string) ([]byte, error) {
@@ -52,12 +52,17 @@ func GetConfig(relPath string) ([]byte, error) {
 	return config, nil
 }
 
-func ParseConfig(config []byte) ([]task.TaskJSON, error) {
-	var result []task.TaskJSON
+type config struct {
+	Tasks []task.TaskJSON `json:"tasks"`
+	Hours int             `json:"hours"`
+}
 
-	err := json.Unmarshal(config, &result)
+func ParseConfig(cfg []byte) (config, error) {
+	var result config
+
+	err := json.Unmarshal(cfg, &result)
 	if err != nil {
-		return []task.TaskJSON{}, err
+		return result, err
 	}
 
 	return result, nil
