@@ -75,7 +75,7 @@ func (a *App) View() string {
 	s := styles.GetTitleString(a.Timer.View())
 	s += "\n\n"
 	s += styles.GetStyledTable(a.Tasks)
-	s += "\n\n" + styles.GetLegendString(a.CurTask)
+	s += "\n\n" + styles.GetLegendString(a.CurTask, a.IsPaused)
 
 	s = styles.GetMainStyle(s)
 

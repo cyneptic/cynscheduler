@@ -29,13 +29,22 @@ func GetTitleString(timer string) string {
 	return lipgloss.NewStyle().Align(lipgloss.Center).Width(80).Render(s + v)
 }
 
-func GetLegendString(curTask *task.Task) string {
+func GetLegendString(curTask *task.Task, isPaused bool) string {
 	var s string
 
-	s += "(CTRL + F) - Finish Task"
+	s += "(Space) - "
+	if isPaused {
+		s += "Resume"
+	} else {
+		s += "Pause"
+	}
+
+	s += ", (CTRL + C) - Exit"
 
 	if curTask.Urgent && !curTask.Important {
 		s += ", (CTRL + D) - Delegate Task"
+	} else {
+		s += ", (CTRL + F) - Finish Task"
 	}
 
 	baseStyle := lipgloss.NewStyle().Width(80).Align(lipgloss.Center).Foreground(lipgloss.Color("248"))
