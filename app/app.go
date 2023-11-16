@@ -3,7 +3,6 @@ package app
 import (
 	"errors"
 	"fmt"
-	"os"
 	"sort"
 	"time"
 
@@ -83,12 +82,14 @@ func (a *App) View() string {
 	s += "\n\n"
 	if a.IsFinished {
 		s = "\nGood bye ! :)\n\n"
-		go func() {
-			time.Sleep(1 * time.Second)
-			os.Exit(0)
-		}()
 	}
-	style := lipgloss.NewStyle().Align(lipgloss.Center).Background(lipgloss.Color("#000ff")).Foreground(lipgloss.Color("#ffff00"))
+	style := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#FAFAFA")).
+		Background(lipgloss.Color("#7D56F4")).
+		PaddingTop(2).
+		PaddingLeft(4)
+
 	return style.Render(s)
 }
 
@@ -96,9 +97,12 @@ type GoodByeMsg struct{}
 
 func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case tea.QuitMsg:
+		time.Sleep(time.Second)
+		return a, tea.Quit
 	case timer.TimeoutMsg:
 		a.IsFinished = true
-		return a, nil
+		return a, func() tea.Msg { return tea.QuitMsg{} }
 
 	case timer.TickMsg:
 		var cmd tea.Cmd
@@ -118,7 +122,7 @@ func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch {
 		case msg.String() == "ctrl+c":
-			os.Exit(1)
+			return a, tea.Quit
 
 		case msg.Type == tea.KeySpace:
 			return a, a.Timer.Toggle()

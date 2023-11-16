@@ -42,6 +42,7 @@ func GetConfig(relPath string) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
+	defer configFile.Close()
 
 	config, err := io.ReadAll(configFile)
 	if err != nil {

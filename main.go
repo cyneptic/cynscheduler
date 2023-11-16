@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
@@ -22,12 +23,12 @@ func main() {
 	scanner.Scan()
 	n, err := strconv.Atoi(scanner.Text())
 	if err != nil {
-		panic(err)
+		log.Fatalf("encountered error: %v", err)
 	}
 
 	app := app.NewApp(tasks, n)
 
 	if _, err := tea.NewProgram(app).Run(); err != nil {
-		panic(err)
+		log.Fatalf("Ops, error when running program: %v", err)
 	}
 }
