@@ -18,7 +18,7 @@ var colors = map[string]lipgloss.Color{
 }
 
 func GetMainStyle(str string) string {
-	baseStyle := lipgloss.NewStyle().Padding(1, 1).Border(lipgloss.RoundedBorder()).BorderForeground(colors["Bubblegum"])
+	baseStyle := lipgloss.NewStyle().Padding(1, 1).Border(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color("245"))
 	return baseStyle.Render(str)
 }
 
@@ -30,26 +30,35 @@ func GetTitleString(timer string) string {
 }
 
 func GetLegendString(curTask *task.Task, isPaused bool) string {
-	var s string
+	activeButtonStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#FFF7DB")).
+		Underline(false).Italic(false).Padding(0, 1).Bold(true)
 
-	s += "(Space) - "
+	s1 := "(Space) "
 	if isPaused {
-		s += "Resume"
+		s1 += "Resume"
 	} else {
-		s += "Pause"
+		s1 += "Pause"
 	}
+	s1 = activeButtonStyle.Render(s1)
 
-	s += ", (CTRL + C) - Exit"
+	s2 := "(R) Rest (15 Minutes)" // TODO: set custom duration in config.json
+	s2 = activeButtonStyle.Render(s2)
 
-	if curTask.Urgent && !curTask.Important {
-		s += ", (CTRL + D) - Delegate Task"
-	} else {
-		s += ", (CTRL + F) - Finish Task"
-	}
+	s3 := "(F) Finish Task"
+	s3 = activeButtonStyle.Render(s3)
 
-	baseStyle := lipgloss.NewStyle().Width(80).Align(lipgloss.Center).Foreground(lipgloss.Color("248"))
+	s4 := "\n\n"
 
-	return baseStyle.Render(s)
+	s5 := activeButtonStyle.Render("(Ctrl+C) Exit")
+
+	// if curTask.Urgent && !curTask.Important {
+	// 	s += ", D - Delegate Task"
+	// }
+
+	baseStyle := lipgloss.NewStyle().Width(80).Align(lipgloss.Center)
+
+	return baseStyle.Render(s1, s2, s3, s4, s5)
 }
 
 func GetStyledTable(tasks []*task.Task) string {

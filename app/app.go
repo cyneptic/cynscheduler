@@ -62,6 +62,12 @@ func (a *App) Next() {
 	a.Tasks = []*task.Task{}
 }
 
+func (a *App) AddRest() {
+	tmp := []*task.Task{task.NewTask("Rest", "rest a bit :)", 15, true, true)}
+	a.Tasks = append(tmp, a.Tasks...)
+	a.CurTask = a.Tasks[0]
+}
+
 func (a *App) Init() tea.Cmd {
 	a.CurTask = a.Tasks[0]
 	return a.Timer.Init()
@@ -86,6 +92,7 @@ type (
 	GoodByeMsg  struct{}
 	FinishMsg   struct{}
 	DelegateMsg struct{}
+	RestMsg     struct{}
 )
 
 func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -133,18 +140,22 @@ func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		a.Timer, cmd = a.Timer.Update(msg)
 		return a, cmd
 
+	case RestMsg:
+		a.AddRest()
+		return a, nil
+
 	case tea.KeyMsg:
 		switch {
 		case msg.String() == "ctrl+c":
 			return a, tea.Quit
-
 		case msg.Type == tea.KeySpace:
 			return a, a.Timer.Toggle()
-
-		case msg.Type == tea.KeyCtrlF:
+		case msg.String() == "f":
 			return a, func() tea.Msg { return FinishMsg{} }
-		case msg.Type == tea.KeyCtrlD:
+		case msg.String() == "d":
 			return a, func() tea.Msg { return DelegateMsg{} }
+		case msg.String() == "r":
+			return a, func() tea.Msg { return RestMsg{} }
 
 		}
 	}
