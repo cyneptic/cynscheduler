@@ -1,5 +1,12 @@
 [
   {
+    "name": "work",
+    "description": "finish work project",
+    "duration_in_minutes": 1,
+    "important": true,
+    "urgent": true
+  },
+  {
     "name": "walk",
     "description": "go for a walk",
     "duration_in_minutes": 3,

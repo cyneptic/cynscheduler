@@ -30,6 +30,10 @@ func (s *TimerService) Done() bool {
 	return s.isFinished
 }
 
+func (s *TimerService) Toggle() {
+	s.isPaused = !s.isPaused
+}
+
 func (s *TimerService) Resume() {
 	if s.isPaused {
 		s.isPaused = false

@@ -7,6 +7,7 @@ import (
 type Timer interface {
 	Tick()
 	Pause()
+	Toggle()
 	Resume()
 	Done() bool
 	Timer() time.Duration

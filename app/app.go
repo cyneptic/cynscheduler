@@ -8,7 +8,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/timer"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	styles "github.com/cyneptic/cynscheduler/style"
 	"github.com/cyneptic/cynscheduler/task"
 )
 
@@ -54,12 +54,7 @@ func sortListByMatrix(tasks []*task.Task) []*task.Task {
 }
 
 func (a *App) Next() {
-	if len(a.Tasks) == 0 {
-		a.IsFinished = true
-		return
-	}
-
-	a.CurTask = a.Tasks[0]
+	a.CurTask = a.Tasks[1]
 	if len(a.Tasks) > 1 {
 		a.Tasks = a.Tasks[1:]
 		return
@@ -69,7 +64,7 @@ func (a *App) Next() {
 }
 
 func (a *App) Init() tea.Cmd {
-	a.Next()
+	a.CurTask = a.Tasks[0]
 	return a.Timer.Init()
 }
 
@@ -80,17 +75,12 @@ func (a *App) View() string {
 		s += fmt.Sprintf(", time remaining: %v", a.CurTask.Timer.Timer())
 	}
 	s += "\n\n"
+	s += styles.GetStyledTable(a.Tasks)
 	if a.IsFinished {
 		s = "\nGood bye ! :)\n\n"
 	}
-	style := lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#FAFAFA")).
-		Background(lipgloss.Color("#7D56F4")).
-		PaddingTop(2).
-		PaddingLeft(4)
 
-	return style.Render(s)
+	return s
 }
 
 type GoodByeMsg struct{}
@@ -106,9 +96,16 @@ func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case timer.TickMsg:
 		var cmd tea.Cmd
-		a.CurTask.Timer.Tick()
 		a.Timer, cmd = a.Timer.Update(msg)
+		if !a.IsPaused {
+			a.CurTask.Timer.Tick()
+		}
 		if a.CurTask.Timer.Done() {
+			if len(a.Tasks) == 1 {
+				a.IsFinished = true
+				time.Sleep(time.Second)
+				return a, func() tea.Msg { return tea.QuitMsg{} }
+			}
 			a.Next()
 		}
 
@@ -116,6 +113,7 @@ func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case timer.StartStopMsg:
 		var cmd tea.Cmd
+		a.IsPaused = !a.IsPaused
 		a.Timer, cmd = a.Timer.Update(msg)
 		return a, cmd
 
